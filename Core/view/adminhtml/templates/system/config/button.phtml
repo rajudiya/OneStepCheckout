@@ -1,0 +1,189 @@
+<?php
+/**
+ * Seofeb
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the seofeb.com license that is
+ * available through the world-wide-web at this URL:
+ * https://seofeb.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Seofeb
+ * @package     Seofeb_Smtp
+ * @copyright   Copyright (c) 2018 Seofeb (https://seofeb.com/)
+ * @license     https://seofeb.com/LICENSE.txt
+ */
+
+/** @var \Seofeb\Core\Block\Adminhtml\System\Config\Button $block */
+?>
+
+<div class="nested" style="font-size: 12px; margin-bottom: 20px">
+<!--    <div class="field choice admin__field admin__field-option">-->
+<!--        <input type="checkbox" id="seofeb_module_create_account" class="admin__control-checkbox" />-->
+<!--        <label for="seofeb_module_create_account" class="admin__field-label">-->
+<!--            <span>--><?php //echo __('Create a new account on Seofeb and Seofeb helpdesk (to get premium support)') ?><!--</span>-->
+<!--        </label>-->
+<!--    </div>-->
+    <div class="field choice admin__field admin__field-option">
+        <input type="checkbox" id="seofeb_module_subscribe" class="admin__control-checkbox"/>
+        <label for="seofeb_module_subscribe" class="admin__field-label">
+            <span><?php echo __('Receive extension updates and promotion offers from Seofeb') ?></span>
+        </label>
+    </div>
+</div>
+
+<?php echo $block->getButtonHtml() ?>
+
+<script>
+    require([
+        'jquery',
+        'prototype'
+    ], function ($j) {
+        var ajaxUrl = '<?php echo $block->getData('mp_active_url') ?>',
+            moduleType = '<?php echo $block->getData('mp_module_type') ?>',
+            defaultConfig = <?php echo $block->getData('mp_free_config') ?>,
+            checkboxConfig = <?php echo $block->getData('mp_module_checkbox') ?>,
+            activeButton = $j('#seofeb_module_active'),
+            updateButton = $j('#seofeb_module_update'),
+            fieldKey = $j('.seofeb-module-active-field-key'),
+            freeFields = $j('.seofeb-module-active-field-free'),
+            emailField = $j('.seofeb-module-active-email'),
+            nameField = $j('.seofeb-module-active-name'),
+//            createAccField = $j('#seofeb_module_create_account'),
+            subscribeField = $j('#seofeb_module_subscribe'),
+            messageContainer = $j('#seofeb-module-messages'),
+            saveButton = $j('#save');
+
+        var submitData = {
+            extension: '<?php echo $block->getData('mp_module_name') ?>',
+            domain: window.location.hostname
+        };
+
+        window.seofebModuleActive = function () {
+            messageContainer.hide();
+
+            if (moduleType === '1') {
+                if (!freeFields.valid()) {
+                    return;
+                }
+                submitData.email = emailField.val();
+                submitData.name = nameField.val();
+                submitData.create = 1;//createAccField.prop('checked') ? 1 : 0;
+                submitData.subscribe = subscribeField.prop('checked') ? 1 : 0;
+
+                if (submitData.hasOwnProperty('update') && submitData.update) {
+                    submitData.key = fieldKey.val();
+                }
+            } else {
+                if (!fieldKey.valid()) {
+                    return;
+                }
+                submitData.key = fieldKey.val();
+            }
+
+            $j.ajax({
+                url: ajaxUrl,
+                data: submitData,
+                dataType: 'json',
+                showLoader: true,
+                success: function (result) {
+                    if (result.key) {
+                        fieldKey.val(result.key);
+                    }
+
+                    updateMessage(result);
+                    activateProduct(result.active);
+                }
+            });
+        };
+
+        window.seofebModuleUpdate = function () {
+            submitData.update = 1;
+
+            messageContainer.hide();
+            updateButton.hide();
+            activeButton.show();
+            activeButton.find('span').html('Submit');
+            activeButton.attr('title', 'Submit');
+
+            fieldKey.closest('tr').hide();
+            freeFields.closest('tr').show();
+            subscribeField.closest('.nested').show();
+        };
+
+        function activateProduct(active) {
+            submitData.update = 0;
+
+            if (active) {
+                activeButton.hide();
+                updateButton.show();
+                saveButton.attr('disabled', false);
+
+                fieldKey.closest('tr').show();
+                freeFields.closest('tr').hide();
+                subscribeField.closest('.nested').hide();
+            } else {
+                saveButton.attr('disabled', 'disabled');
+                updateButton.hide();
+                activeButton.show();
+
+                fieldKey.closest('tr').hide();
+                freeFields.closest('tr').show();
+                subscribeField.closest('.nested').show();
+            }
+        }
+
+        function updateMessage(result) {
+            if (result.message) {
+                messageContainer.show();
+                messageContainer.find('.message div').html(result.message);
+                messageContainer.find('.message')
+                    .removeClass('message-' + (result.success ? 'error' : 'success'))
+                    .addClass('message-' + (result.success ? 'success' : 'error'));
+            }
+        }
+        
+        var isActive = <?php echo $block->getData('mp_is_active') ? 'true' : 'false' ?>;
+        activateProduct(isActive);
+
+        if (!isActive) {
+            var containerId = '<?php echo $block->getData('mp_module_html_id') ?>';
+            $(containerId + '-state').value = 0;
+            Fieldset.toggleCollapse(containerId);
+
+            updateMessage({
+                success: false,
+                message: 'This extension is not actived.'
+            });
+        }
+
+        fieldKey.attr('readonly', true);
+        freeFields.removeAttr('name');
+
+        if (moduleType === '1') {
+            if(defaultConfig){
+                if (!emailField.val() && defaultConfig.email) {
+                    emailField.val(defaultConfig.email);
+                }
+                if (!nameField.val() && defaultConfig.name) {
+                    nameField.val(defaultConfig.name);
+                }
+            }
+
+            if(checkboxConfig){
+//                if (checkboxConfig.create) {
+//                    createAccField.prop("checked", true);
+//                }
+                if (checkboxConfig.subscribe) {
+                    subscribeField.prop("checked", true);
+                }
+            }
+        }
+    })
+    ;
+</script>

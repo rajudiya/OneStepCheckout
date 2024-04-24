@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Seofeb
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Seofeb.com license that is
+ * available through the world-wide-web at this URL:
+ * https://seofeb.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Seofeb
+ * @package     Seofeb_OneStepCheckout
+ * @copyright   Copyright (c) 2018 Seofeb (https://seofeb.com/)
+ * @license     https://seofeb.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Block\Onepage">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="onestepcheckout" xsi:type="object">Seofeb\OneStepCheckout\Block\Checkout\OneStepCheckoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Tax\Model\TaxConfigProvider">
+        <plugin name="geo_ip_country" type="Seofeb\OneStepCheckout\Plugin\GeoIpCountryPlugin" />
+    </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="one_step_checkout_config_provider" xsi:type="object">Seofeb\OneStepCheckout\ConfigProvider\CheckoutConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Result\Layout">
+        <plugin name="remove_containers" type="Seofeb\OneStepCheckout\Plugin\RemoveContainersPlugin" />
+    </type>
+    <preference for="Magento\Directory\Helper\Data" type="Seofeb\OneStepCheckout\Helper\Directory\Data" />
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="seofeb_onestepcheckout" xsi:type="array">
+                    <item name="class" xsi:type="string">Seofeb\OneStepCheckout\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Block\Cart\Sidebar">
+        <plugin name="onestepcheckout-cart-sidebar-checkout-url" type="Seofeb\OneStepCheckout\Plugin\BlockCartSidebarPlugin" sortOrder="1"/>
+    </type>
+</config>

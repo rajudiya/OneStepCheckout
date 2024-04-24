@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Seofeb
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Seofeb.com license that is
+ * available through the world-wide-web at this URL:
+ * https://seofeb.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Seofeb
+ * @package     Seofeb_OneStepCheckout
+ * @copyright   Copyright (c) 2018 Seofeb (https://seofeb.com/)
+ * @license     https://seofeb.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Seofeb_OneStepCheckout::onestepcheckout" title="One Step Checkout" module="Seofeb_OneStepCheckout" sortOrder="112" resource="Seofeb_OneStepCheckout::one_step_checkout" parent="Seofeb_Core::menu"/>
+        <add id="Seofeb_OneStepCheckout::configuration" title="Configuration" module="Seofeb_OneStepCheckout" sortOrder="10" action="adminhtml/system_config/edit/section/one_step_checkout" resource="Seofeb_OneStepCheckout::one_step_checkout" parent="Seofeb_OneStepCheckout::onestepcheckout"/>
+    </menu>
+</config>

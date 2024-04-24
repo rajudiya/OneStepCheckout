@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Seofeb
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Seofeb.com license that is
+ * available through the world-wide-web at this URL:
+ * https://seofeb.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Seofeb
+ * @package     Seofeb_DeliveryDate
+ * @copyright   Copyright (c) 2018 Seofeb (https://seofeb.com/)
+ * @license     https://seofeb.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Seofeb_DeliveryDate::deliverydate" title="Delivery Date" module="Seofeb_DeliveryDate" sortOrder="118" resource="Seofeb_DeliveryDate::deliverydate" parent="Seofeb_Core::menu"/>
+        <add id="Seofeb_DeliveryDate::configuration" title="Configuration" module="Seofeb_DeliveryDate" sortOrder="10" action="adminhtml/system_config/edit/section/deliverydate" resource="Seofeb_DeliveryDate::deliverydate" parent="Seofeb_DeliveryDate::deliverydate"/>
+    </menu>
+</config>

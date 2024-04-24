@@ -1,0 +1,25 @@
+{
+  "name": "seofeb/module-core",
+  "description": "Seofeb Core for Magento 2",
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": "proprietary",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Seofeb",
+      "email": "seofeb@gmail.com",
+      "homepage": "https://seofeb.com",
+      "role": "Leader"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Seofeb\\Core\\": ""
+    }
+  }
+}
